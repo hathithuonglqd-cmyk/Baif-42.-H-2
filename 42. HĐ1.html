@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khám Phá Đột Biến Gene - Sinh Học 10</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #ff6b81;
+            --secondary-color: #7bed9f;
+            --accent-color: #70a1ff;
+            --bg-color: #ffffed;
+            --card-bg: #ffffff;
+            --text-color: #2f3542;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ffeaa7 0%, #dfe6e9 100%);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--card-bg);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        /* Screen 1: Login */
+        #login-screen {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin: 20px 0;
+        }
+
+        .form-group label {
+            font-weight: 700;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .form-group input {
+            width: 80%;
+            max-width: 400px;
+            padding: 12px 20px;
+            border: 2px solid #dfe4ea;
+            border-radius: 50px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            text-align: center;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(255, 107, 129, 0.3);
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.3s;
+            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.4);
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .btn:hover {
+            background-color: #ff4757;
+            transform: translateY(-2px);
+        }
+
+        /* Screen 2: Main Activity */
+        #activity-screen {
+            display: none;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f1f2f6;
+            padding: 10px 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .timer {
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 1.1rem;
+        }
+
+        .instruction-box {
+            background: #fff3f3;
+            border-left: 5px solid var(--primary-color);
+            padding: 15px;
+            border-radius: 0 15px 15px 0;
+            margin-bottom: 20px;
+        }
+
+        /* SƠ ĐỒ TRỰC QUAN */
+        .visual-diagram-box {
+            background: #fdfbf7;
+            border: 2px dashed #ffb199;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .visual-diagram-box h4 {
+            color: #d63031;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .gene-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: 1px solid #dfe4ea;
+            font-size: 0.95rem;
+            flex-wrap: wrap;
+        }
+
+        .gene-label {
+            font-weight: 700;
+            color: #2f3542;
+            width: 140px;
+            text-align: left;
+        }
+
+        .gene-sequence {
+            font-family: monospace;
+            letter-spacing: 2px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #2e86de;
+        }
+
+        .highlight-mut {
+            color: #ff4757;
+            background: #ffeaa7;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 2px dashed #ced6e0;
+            position: relative;
+        }
+
+        .question-card h3 {
+            margin-top: 0;
+            color: #2f3542;
+            font-size: 1.1rem;
+            text-align: left;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ced6e0;
+            font-family: 'Quicksand', sans-serif;
+            margin-top: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        /* Phản hồi inline trên từng câu */
+        .inline-feedback {
+            display: none;
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+        }
+        .inline-feedback.correct-fb {
+            background: #e8f8f5;
+            border: 1px solid #2ecc71;
+            color: #27ae60;
+        }
+        .inline-feedback.incorrect-fb {
+            background: #ffd2d2;
+            border: 1px solid #e74c3c;
+            color: #c0392b;
+        }
+
+        /* AI Assistant Section */
+        .ai-assistant-box {
+            background: #eef2ff;
+            border: 2px solid var(--accent-color);
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+
+        .ai-assistant-box h3 {
+            color: var(--accent-color);
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chat-history {
+            height: 150px;
+            background: #fff;
+            border: 1px solid #dcdde1;
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-group input {
+            flex: 1;
+            padding: 8px 15px;
+            border: 1px solid #ced6e0;
+            border-radius: 20px;
+            outline: none;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .chat-input-group button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .chat-input-group button:hover {
+            background-color: #38ada8;
+        }
+
+        /* Result Section Tổng */
+        #result-section {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #e8f8f5;
+            border-radius: 15px;
+            border: 2px solid #2ecc71;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #27ae60;
+            margin: 10px 0;
+        }
+
+        /* Iframe & Link Section */
+        .iframe-container {
+            margin-top: 30px;
+            border-top: 2px dashed #dfe4ea;
+            padding-top: 20px;
+            text-align: center;
+        }
+
+        iframe {
+            width: 100%;
+            height: 450px;
+            border: 2px solid #ced6e0;
+            border-radius: 15px;
+            background: #fff;
+            margin-bottom: 15px;
+        }
+
+        .sheet-link-box {
+            background: #f1f2f6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .sheet-link-box a {
+            color: #0984e3;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1.1rem;
+        }
+
+        .sheet-link-box a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- MÀN HÌNH 1: NHẬP THÔNG TIN -->
+    <div id="login-screen">
+        <h2>🌸 HOẠT ĐỘNG NHÓM: KHÁM PHÁ ĐỘT BIẾN GENE 🌸</h2>
+        <p>Các nhóm hãy nhập đầy đủ thông tin bên dưới để bắt đầu thử thách nhé!</p>
+        <div class="form-group">
+            <label for="group-name">Tên Nhóm:</label>
+            <input type="text" id="group-name" placeholder="Ví dụ: Nhóm 1 - Siêu Sao">
+        </div>
+        <div class="form-group">
+            <label for="class-name">Lớp:</label>
+            <input type="text" id="class-name" placeholder="Ví dụ: 10A1">
+        </div>
+        <button class="btn" onclick="startActivity()">Bắt Đầu Khám Phá 🚀</button>
+    </div>
+
+    <!-- MÀN HÌNH 2: NỘI DUNG HOẠT ĐỘNG VÀ TRỢ LÝ AI -->
+    <div id="activity-screen">
+        <div class="header-info">
+            <div>Nhóm: <span id="display-group" style="color: var(--primary-color);"></span> | Lớp: <span id="display-class" style="color: var(--primary-color);"></span></div>
+            <div class="timer" id="timer">⏱️ 00:00</div>
+        </div>
+
+        <div class="instruction-box">
+            <strong>📋 Nhiệm vụ:</strong> Quan sát sơ đồ so sánh trình tự nucleotide (A, T, G, C) ở gene ban đầu với các allele đột biến số 1, số 2 và số 3 để xác định dạng đột biến tương ứng. Thang điểm: 10 điểm.
+        </div>
+
+        <!-- SƠ ĐỒ TRỰC QUAN -->
+        <div class="visual-diagram-box">
+            <h4>🖼️ Sơ đồ 41.1: Trình tự nucleotide ở Allele kiểu dại và các Allele đột biến</h4>
+            <div class="gene-row">
+                <span class="gene-label">Allele kiểu dại:</span>
+                <span class="gene-sequence">5' - A T G <span style="color:#27ae60">X G A T</span> T A X - 3'</span>
+            </div>
+            <div class="gene-row">
+                <span class="gene-label">Allele số 1:</span>
+                <span class="gene-sequence">5' - A T G <span class="highlight-mut">X G A</span> T T A X - 3'</span>
+            </div>
+            <div class="gene-row">
+                <span class="gene-label">Allele số 2:</span>
+                <span class="gene-sequence">5' - A T G <span class="highlight-mut">X G A T A</span> T T A X - 3'</span>
+            </div>
+            <div class="gene-row">
+                <span class="gene-label">Allele số 3:</span>
+                <span class="gene-sequence">5' - A T G <span class="highlight-mut">X G A A</span> T T A X - 3'</span>
+            </div>
+            <p style="font-size: 0.9rem; color: #57606f; margin-top: 10px; margin-bottom: 0;">(Sử dụng sơ đồ trực quan trên để đối chiếu so sánh sự thay đổi trình tự nucleotide)</p>
+        </div>
+
+        <!-- 🤖 TRỢ LÝ AI HỎI ĐÁP -->
+        <div class="ai-assistant-box">
+            <h3>🤖 Trợ Lý AI Sinh Học (Hỏi đáp thắc mắc về bài học)</h3>
+            <div class="chat-history" id="chat-history">
+                <div><strong>Trợ lý AI:</strong> Chào các bạn! Nhóm mình cần giải đáp câu hỏi nào về các dạng đột biến gene hay sơ đồ trên không? Cứ hỏi tụi mình nhé!</div>
+            </div>
+            <div class="chat-input-group">
+                <input type="text" id="user-question" placeholder="Nhập câu hỏi của nhóm (VD: Allele 1 mất cặp nào?)..." onkeypress="handleKeyPress(event)">
+                <button onclick="askAI()">Gửi Hỏi AI</button>
+            </div>
+        </div>
+
+        <!-- Câu hỏi 1 -->
+        <div class="question-card" id="card-q1">
+            <h3>Câu 1: Quan sát sơ đồ, các allele đột biến số 1, số 2 và số 3 có thay đổi gì so với allele kiểu dại?</h3>
+            
+            <label><strong>Allele số 1:</strong></label>
+            <select id="q1-a1">
+                <option value="">-- Chọn kết quả so sánh --</option>
+                <option value="mat">Mất 1 cặp nucleotide</option>
+                <option value="them">Thêm 1 cặp nucleotide</option>
+                <option value="thaythe">Thay thế cặp nucleotide</option>
+            </select>
+
+            <label style="margin-top: 10px; display:block;"><strong>Allele số 2:</strong></label>
+            <select id="q1-a2">
+                <option value="">-- Chọn kết quả so sánh --</option>
+                <option value="mat">Mất 1 cặp nucleotide</option>
+                <option value="them">Thêm 1 cặp nucleotide</option>
+                <option value="thaythe">Thay thế cặp nucleotide</option>
+            </select>
+
+            <label style="margin-top: 10px; display:block;"><strong>Allele số 3:</strong></label>
+            <select id="q1-a3">
+                <option value="">-- Chọn kết quả so sánh --</option>
+                <option value="mat">Mất 1 cặp nucleotide</option>
+                <option value="them">Thêm 1 cặp nucleotide</option>
+                <option value="thaythe">Thay thế cặp nucleotide</option>
+            </select>
+            <div id="fb-q1" class="inline-feedback"></div>
+        </div>
+
+        <!-- Câu hỏi 2 -->
+        <div class="question-card" id="card-q2">
+            <h3>Câu 2: Đột biến gene là gì?</h3>
+            <select id="q2">
+                <option value="">-- Chọn khái niệm đúng --</option>
+                <option value="wrong1">Là những biến đổi về cấu trúc của nhiễm sắc thể xảy ra ở tế bào sinh dưỡng hoặc sinh dục.</option>
+                <option value="correct">Là những biến đổi trong cấu trúc của gene liên quan tới một hoặc một số cặp nucleotide, xảy ra tại một điểm nào đó tính trên phân tử gene.</option>
+                <option value="wrong2">Là sự thay đổi số lượng toàn bộ bộ nhiễm sắc thể của loài.</option>
+            </select>
+            <div id="fb-q2" class="inline-feedback"></div>
+        </div>
+
+        <!-- Câu hỏi 3 -->
+        <div class="question-card" id="card-q3">
+            <h3>Câu 3: Đột biến gene gồm những dạng nào phổ biến (tính trên 1 cặp nucleotide)?</h3>
+            <select id="q3">
+                <option value="">-- Chọn các dạng đột biến --</option>
+                <option value="correct">Mất, thêm hoặc thay thế cặp nucleotide.</option>
+                <option value="wrong1">Đảo đoạn và chuyển đoạn nucleotide.</option>
+                <option value="wrong2">Lặp đoạn và mất đoạn nhiễm sắc thể.</option>
+            </select>
+            <div id="fb-q3" class="inline-feedback"></div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="btn" onclick="submitAndGrade()">Nộp Bài & Chấm Điểm Trực Tiếp ✨</button>
+        </div>
+
+        <!-- KẾT QUẢ TỔNG KẾT -->
+        <div id="result-section">
+            <h2>🎉 KẾT QUẢ TỔNG KẾT BÀI LÀM CỦA NHÓM 🎉</h2>
+            <div class="score-display" id="final-score">0.0 / 10</div>
+            <p id="congrats-msg" style="font-weight: 600; font-size: 1.1rem;"></p>
+            <p style="color: #636e72; font-style: italic;">👉 Hãy xem phần giải thích màu xanh/đỏ hiển thị trực tiếp ngay bên dưới mỗi câu hỏi phía trên để rút kinh nghiệm nhé!</p>
+        </div>
+
+        <!-- KHUNG NHÚNG & LINK NHẬP ĐIỂM -->
+        <div class="iframe-container">
+            <h3>📥 Nộp Kết Quả & Bảng Điểm Tổng Hợp</h3>
+            <p>Các nhóm có thể nộp bài trực tiếp qua ứng dụng bên dưới:</p>
+            <iframe src="https://docs.google.com/spreadsheets/d/1_L0qZN5zZEuPNuCx7b30Ht6znogc7qi5disfcAD9fG4/edit?gid=524817967#gid=524817967/exec" title="Ứng dụng nộp bài"></iframe>
+            
+            <div class="sheet-link-box">
+                <p>📊 Giáo viên và học sinh truy cập trực tiếp Google Sheets tổng hợp điểm tại đây:</p>
+                <a href="https://docs.google.com/spreadsheets/d/1_L0qZN5zZEuPNuCx7b30Ht6znogc7qi5disfcAD9fG4/edit?gid=524817967#gid=524817967/edit?gid=524817967#gid=524817967" target="_blank">👉 Mở Bảng Nhập Điểm Google Sheets</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let timerInterval;
+    let secondsElapsed = 0;
+
+    function startActivity() {
+        const groupName = document.getElementById('group-name').value.trim();
+        const className = document.getElementById('class-name').value.trim();
+
+        if (!groupName || !className) {
+            alert('Vui lòng nhập đầy đủ Tên Nhóm và Lớp trước khi bắt đầu!');
+            return;
+        }
+
+        document.getElementById('display-group').innerText = groupName;
+        document.getElementById('display-class').innerText = className;
+
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('activity-screen').style.display = 'block';
+
+        // Bắt đầu đồng hồ bấm giờ
+        timerInterval = setInterval(() => {
+            secondsElapsed++;
+            let mins = Math.floor(secondsElapsed / 60);
+            let secs = secondsElapsed % 60;
+            document.getElementById('timer').innerText = `⏱️ ${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }, 1000);
+    }
+
+    // Trợ lý AI giải đáp câu hỏi học sinh
+    function askAI() {
+        const inputField = document.getElementById('user-question');
+        const question = inputField.value.trim().toLowerCase();
+        const chatHistory = document.getElementById('chat-history');
+
+        if (!question) return;
+
+        chatHistory.innerHTML += `<div><strong>Nhóm:</strong> ${inputField.value}</div>`;
+        
+        let aiResponse = "Xin lỗi nhóm, mình chưa hiểu rõ ý câu hỏi. Các bạn hãy hỏi về 'allele 1', 'allele 2', 'allele 3', 'đột biến gene là gì' hoặc 'các dạng đột biến nhé!";
+
+        if (question.includes('allele 1') || question.includes('số 1') || question.includes('mất')) {
+            aiResponse = "💡 <strong>Gợi ý từ Trợ lý AI:</strong> Quan sát sơ đồ, ở Allele số 1 so với allele kiểu dại, đoạn trình tự đã bị ngắn đi 1 nucleotide. Dạng đột biến này gọi là <em>Mất cặp nucleotide</em>.";
+        } else if (question.includes('allele 2') || question.includes('số 2') || question.includes('thêm')) {
+            aiResponse = "💡 <strong>Gợi ý từ Trợ lý AI:</strong> Ở Allele số 2, đoạn trình tự có thêm nucleotide xuất hiện so với ban đầu. Dạng đột biến này là <em>Thêm cặp nucleotide</em>.";
+        } else if (question.includes('allele 3') || question.includes('số 3') || question.includes('thay thế')) {
+            aiResponse = "💡 <strong>Gợi ý từ Trợ lý AI:</strong> Ở Allele số 3, tổng số lượng nucleotide giữ nguyên nhưng một vị trí nucleotide đã bị đổi khác. Dạng đột biến này là <em>Thay thế cặp nucleotide</em>.";
+        } else if (question.includes('đột biến gene là gì') || question.includes('khái niệm')) {
+            aiResponse = "💡 <strong>Gợi ý từ Trợ lý AI:</strong> Đột biến gene là những biến đổi trong cấu trúc của gene liên quan tới một hoặc một số cặp nucleotide, xảy ra tại một điểm nào đó tính trên phân tử gene.";
+        } else if (question.includes('dạng')) {
+            aiResponse = "💡 <strong>Gợi ý từ Trợ lý AI:</strong> Đột biến gene liên quan đến 1 cặp nucleotide thường có 3 dạng chính: Mất cặp nucleotide, Thêm cặp nucleotide và Thay thế cặp nucleotide.";
+        }
+
+        setTimeout(() => {
+            chatHistory.innerHTML += `<div><strong>Trợ lý AI:</strong> ${aiResponse}</div>`;
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }, 300);
+
+        inputField.value = '';
+    }
+
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            askAI();
+        }
+    }
+
+    function submitAndGrade() {
+        clearInterval(timerInterval);
+
+        let a1 = document.getElementById('q1-a1').value;
+        let a2 = document.getElementById('q1-a2').value;
+        let a3 = document.getElementById('q1-a3').value;
+        let q2 = document.getElementById('q2').value;
+        let q3 = document.getElementById('q3').value;
+
+        let score = 0;
+
+        // --- CHẤM VÀ HIỂN THỊ TRỰC TIẾP CÂU 1 (6 điểm) ---
+        let scoreA1 = (a1 === 'mat') ? 2 : 0;
+        let scoreA2 = (a2 === 'them') ? 2 : 0;
+        let scoreA3 = (a3 === 'thaythe') ? 2 : 0;
+        let totalQ1 = scoreA1 + scoreA2 + scoreA3;
+        score += totalQ1;
+
+        let fbQ1 = document.getElementById('fb-q1');
+        fbQ1.style.display = 'block';
+        if (totalQ1 === 6) {
+            fbQ1.className = 'inline-feedback correct-fb';
+            fbQ1.innerHTML = `✅ <strong>Tuyệt vời (+6.0đ):</strong> Nhóm đã nhận diện chính xác cả 3 dạng allele đột biến so với kiểu dại!`;
+        } else {
+            fbQ1.className = 'inline-feedback incorrect-fb';
+            fbQ1.innerHTML = `❌ <strong>Cần xem lại (${totalQ1}/6đ):</strong> <br>` +
+                `- Allele số 1: ${scoreA1 === 2 ? 'Đúng (Mất cặp)' : 'Sai (Đáp án đúng: Mất cặp nucleotide)'}<br>` +
+                `- Allele số 2: ${scoreA2 === 2 ? 'Đúng (Thêm cặp)' : 'Sai (Đáp án đúng: Thêm cặp nucleotide)'}<br>` +
+                `- Allele số 3: ${scoreA3 === 2 ? 'Đúng (Thay thế)' : 'Sai (Đáp án đúng: Thay thế cặp nucleotide)'}`;
+        }
+
+        // --- CHẤM VÀ HIỂN THỊ TRỰC TIẾP CÂU 2 (2 điểm) ---
+        let fbQ2 = document.getElementById('fb-q2');
+        fbQ2.style.display = 'block';
+        if (q2 === 'correct') {
+            score += 2;
+            fbQ2.className = 'inline-feedback correct-fb';
+            fbQ2.innerHTML = `✅ <strong>Chính xác (+2.0đ):</strong> Đây đúng là định nghĩa chuẩn của đột biến gene.`;
+        } else {
+            fbQ2.className = 'inline-feedback incorrect-fb';
+            fbQ2.innerHTML = `❌ <strong>Chưa chính xác (0/2đ):</strong> Đột biến gene là những biến đổi trong cấu trúc của gene liên quan tới một hoặc một số cặp nucleotide, xảy ra tại một điểm nào đó tính trên phân tử gene.`;
+        }
+
+        // --- CHẤM VÀ HIỂN THỊ TRỰC TIẾP CÂU 3 (2 điểm) ---
+        let fbQ3 = document.getElementById('fb-q3');
+        fbQ3.style.display = 'block';
+        if (q3 === 'correct') {
+            score += 2;
+            fbQ3.className = 'inline-feedback correct-fb';
+            fbQ3.innerHTML = `✅ <strong>Chính xác (+2.0đ):</strong> Ba dạng phổ biến khi tính trên 1 cặp nucleotide là mất, thêm hoặc thay thế cặp nucleotide.`;
+        } else {
+            fbQ3.className = 'inline-feedback incorrect-fb';
+            fbQ3.innerHTML = `❌ <strong>Chưa chính xác (0/2đ):</strong> Các dạng đột biến phổ biến liên quan tới 1 cặp nucleotide bao gồm: Mất, thêm hoặc thay thế cặp nucleotide.`;
+        }
+
+        // --- TỔNG KẾT ---
+        document.getElementById('final-score').innerText = `${score.toFixed(1)} / 10`;
+        
+        let msg = "";
+        if (score === 10) {
+            msg = "🌟 Quá xuất sắc! Nhóm nắm bài cực kỳ chắc và trả lời hoàn hảo mọi ý.";
+        } else if (score >= 6) {
+            msg = "👍 Khá tốt! Nhóm đã hiểu cơ bản, hãy xem lại các ý bị sai phía trên để rút kinh nghiệm nhé.";
+        } else {
+            msg = "💪 Cố gắng lên nhé! Hãy dùng trợ lý AI phía trên để hỏi lại và luyện tập thêm nha.";
+        }
+        document.getElementById('congrats-msg').innerText = msg;
+
+        document.getElementById('result-section').style.display = 'block';
+        document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
